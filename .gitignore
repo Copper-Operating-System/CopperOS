@@ -1,2 +1,4 @@
 *.bin
 os.img
+os.iso
+isodir/
