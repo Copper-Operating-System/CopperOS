@@ -1,0 +1,2 @@
+# CopperOS
+The CopperOS system
