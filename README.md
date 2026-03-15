@@ -24,6 +24,7 @@ os.img (raw disk image)
 ## Requirements
 
 - [NASM](https://www.nasm.us/) — Netwide Assembler
+- [xorriso](https://www.gnu.org/software/xorriso/) — to build the ISO image (`make iso`)
 - [QEMU](https://www.qemu.org/) — to run the OS image (optional)
 
 ## Building
@@ -33,6 +34,14 @@ make
 ```
 
 This produces `os.img`, a raw disk image containing the bootloader and kernel.
+
+### Building a bootable ISO
+
+```bash
+make iso
+```
+
+This produces `os.iso`, a bootable El Torito ISO image suitable for burning to a CD/DVD or booting in a virtual machine.
 
 ## Running
 
@@ -52,3 +61,10 @@ CopperOS kernel has booted successfully!
 ```bash
 make clean
 ```
+
+## Releases
+
+Pre-built ISO images are available on the [Releases](../../releases) page.
+A new release is automatically published whenever a version tag is pushed (e.g. `v0.1.0-beta`).
+Tags that include `alpha`, `beta`, `rc`, or `pre` are published as pre-releases.
+
