@@ -14,6 +14,13 @@
 # reads. Increase it (and the kernel image) if the kernel grows beyond
 # KERNEL_SECTORS * 512 bytes.
 
+# Check for required tools (skip for the 'clean' target)
+ifneq ($(MAKECMDGOALS),clean)
+ifeq ($(shell which nasm 2>/dev/null),)
+$(error nasm not found. Install it first: Ubuntu/Debian: sudo apt-get install nasm -- Fedora: sudo dnf install nasm -- macOS: brew install nasm)
+endif
+endif
+
 BOOT_SRC   := boot/boot.asm
 KERNEL_SRC := kernel/kernel.asm
 
@@ -42,6 +49,7 @@ $(OS_IMG): $(BOOT_BIN) $(KERNEL_BIN)
 iso: $(OS_ISO)
 
 $(OS_ISO): $(OS_IMG)
+	@command -v xorriso >/dev/null 2>&1 || { echo "Error: xorriso not found. Install it first: Ubuntu/Debian: sudo apt-get install xorriso -- Fedora: sudo dnf install xorriso -- macOS: brew install xorriso"; exit 1; }
 	mkdir -p $(ISO_DIR)
 	cp $(OS_IMG) $(ISO_DIR)/$(OS_IMG)
 	xorriso -as mkisofs \
@@ -54,6 +62,7 @@ $(OS_ISO): $(OS_IMG)
 	rm -rf $(ISO_DIR)
 
 run: $(OS_IMG)
+	@command -v qemu-system-x86_64 >/dev/null 2>&1 || { echo "Error: qemu-system-x86_64 not found. Install it first: Ubuntu/Debian: sudo apt-get install qemu-system-x86 -- Fedora: sudo dnf install qemu-system-x86 -- macOS: brew install qemu"; exit 1; }
 	qemu-system-x86_64 -drive format=raw,file=$(OS_IMG)
 
 clean:
