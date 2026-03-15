@@ -46,8 +46,8 @@ all: $(OS_IMG)
 $(BOOT_BIN): $(BOOT_SRC)
 	nasm -f bin -o $@ $<
 
-$(KERNEL_BIN): $(KERNEL_SRC)
-	nasm -f bin -o $@ $<
+$(KERNEL_BIN): $(KERNEL_SRC) kernel/image_palette.bin kernel/image_pixels.bin
+	nasm -f bin -I kernel/ -o $@ $<
 
 # Combine the bootloader and kernel into a single raw disk image padded to
 # 1.44 MB (FLOPPY_SECTORS × 512 bytes).  The padding is required so that
@@ -76,7 +76,7 @@ $(OS_ISO): $(OS_IMG)
 
 run: $(OS_IMG)
 	@command -v qemu-system-x86_64 >/dev/null 2>&1 || { echo "Error: qemu-system-x86_64 not found. Install it first: Ubuntu/Debian: sudo apt-get install qemu-system-x86 -- Fedora: sudo dnf install qemu-system-x86 -- macOS: brew install qemu"; exit 1; }
-	qemu-system-x86_64 -drive format=raw,file=$(OS_IMG)
+	qemu-system-x86_64 -fda $(OS_IMG)
 
 # Build a VMDK disk image from the raw disk image for use in VirtualBox.
 # Requires qemu-img: https://www.qemu.org/
